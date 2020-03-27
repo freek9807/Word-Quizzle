@@ -3,8 +3,8 @@ package Remote.Tests;
 import Remote.C_RMI_API_Client;
 import Remote.Exception.PasswordNotValidException;
 import Remote.Exception.UserAlreadyExistsException;
-import Remote.Models.SignedUpUsersListModel;
-import Remote.Models.UserModel;
+import Models.SignedUpUsersListModel;
+import Models.UserModel;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 
@@ -16,7 +16,7 @@ public class RemoteTestNG {
 
     AtomicInteger atomicInteger = new AtomicInteger(0);
     SignedUpUsersListModel val = new SignedUpUsersListModel();
-    C_RMI_API_Client server = new C_RMI_API_Client();
+    C_RMI_API_Client server = new C_RMI_API_Client(val);
 
     public RemoteTestNG() throws RemoteException {
     }

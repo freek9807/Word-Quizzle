@@ -1,5 +1,6 @@
-package Remote.Models;
+package Models;
 
+import Request.ListFriends;
 import com.google.gson.Gson;
 
 import java.io.*;
@@ -10,6 +11,7 @@ import java.util.Collections;
 public  class SignedUpUsersListModel {
     private ArrayList<UserModel> data;
     private final String nameFile = "userList.json";
+
     public enum addResult{
         FULL,
         OKAY,
@@ -43,7 +45,7 @@ public  class SignedUpUsersListModel {
         }
     }
 
-    public synchronized addResult add(UserModel um){
+    public addResult add(UserModel um){
         synchronized (this) {
             this.retrieve();
             for (UserModel uml : data) {
@@ -57,6 +59,47 @@ public  class SignedUpUsersListModel {
             } else
                 return addResult.FULL;
         }
+    }
+
+    public boolean isValid(UserModel um){
+        synchronized (this){
+            this.retrieve();
+            for (UserModel uml : data) {
+                if (uml.isEqual(um))
+                    return true;
+            }
+            return false;
+        }
+    }
+
+    public boolean addFriendEdge(UserModel a, UserModel b){
+        synchronized (this){
+            this.retrieve();
+            if(!data.contains(a) || !data.contains(b) || a.equals(b)) {
+                return false;
+            }
+            for(UserModel um : data){
+                if(um.equals(a)){
+                    um.addFriend(b.user);
+                }
+                if(um.equals(b)){
+                    um.addFriend(a.user);
+                }
+            }
+            this.store();
+        }
+        return true;
+    }
+
+    public ArrayList<String> retrieveFriends(ListFriends lf){
+        synchronized (this){
+            for(UserModel um : data){
+                if(um.equals(new UserModel().setUser(lf.getUser()))){
+                    return um.getFriends();
+                }
+            }
+        }
+        return null;
     }
 
     private boolean store(){
