@@ -1,11 +1,11 @@
 package Request;
 /**
- *  Formato di una richiesta di lista utenti
+ * Richiesta di punteggio per un utente
  *
  * @author Federico Pennino
  */
-public class ListFriends implements Request {
-    // Il nome dell'utente che vuole la lista dei suoi amici
+public class UserScore implements Request {
+    // Il nome dell'utente di cui si vuole sapere il punteggio
     private String user;
 
     public String getUser() {

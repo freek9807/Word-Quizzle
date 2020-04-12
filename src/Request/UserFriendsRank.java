@@ -1,10 +1,10 @@
 package Request;
 /**
- *  Formato di una richiesta di lista utenti
+ * Richiesta di classifica degli amici
  *
  * @author Federico Pennino
  */
-public class ListFriends implements Request {
+public class UserFriendsRank implements Request {
     // Il nome dell'utente che vuole la lista dei suoi amici
     private String user;
 
