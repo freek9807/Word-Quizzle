@@ -37,7 +37,7 @@ public class C_RMI_API_Client extends UnicastRemoteObject implements I_RMI_API_C
     @Override
     public synchronized boolean registration(String username, String password) throws PasswordNotValidException, UserAlreadyExistsException {
         // Se non sono validi i dati passati
-        if( username == null || password == null)
+        if( username == null || password == null || username.equals(""))
             throw new IllegalArgumentException("Utente non valido");
         // Se la password è vuota
         if(password.equals(""))
