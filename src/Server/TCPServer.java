@@ -9,6 +9,7 @@ import Server.Runnable.LoggedInUserRunnable;
 import java.io.*;
 import java.net.DatagramSocket;
 import java.net.InetSocketAddress;
+import java.net.ServerSocket;
 import java.net.Socket;
 import java.nio.channels.ServerSocketChannel;
 import java.nio.channels.SocketChannel;
@@ -22,9 +23,9 @@ import java.util.concurrent.ThreadPoolExecutor;
  */
 public class TCPServer {
     /**
-     * il canale del Server Socket
+     * Server Socket per le connessioni TCP
      */
-    ServerSocketChannel serverSocket;
+    ServerSocket serverSocket;
     /**
      * Il pool dei thread in esecuzione
      */
@@ -41,8 +42,7 @@ public class TCPServer {
      */
     public TCPServer(SignedUpUsersListModel usersListModel) throws IOException, ClassNotFoundException {
         // Apro il canale del ServerSocket
-        serverSocket = ServerSocketChannel.open();
-        serverSocket.bind(new InetSocketAddress("localhost", 5454));
+        serverSocket = new ServerSocket(5454);
         // Creo un nuovo Datagram per la connessione UDP
         DatagramSocket serverSocketUDP = new DatagramSocket();
         // Ottengo la porta UDP su cui scrivere
@@ -53,23 +53,22 @@ public class TCPServer {
         // La invio al client
         while (true) {
             // Aspetto una connessione
-            SocketChannel socket = serverSocket.accept();
-            Socket sock = socket.socket();
+            Socket sock = serverSocket.accept();
             // Apro gli stream di Input e Output verso il socket
             ObjectInputStream ois = new ObjectInputStream(sock.getInputStream());
             DataOutputStream dos = new DataOutputStream(sock.getOutputStream());
             // Ottengo le informazioni di login dal socket
             UserModel clientUser = (UserModel) ois.readObject();
+            // Costruisco l'oggetto che descrive le informazioni sulla connessione col client
+            ClientConnectionInfo clientInfo = new ClientConnectionInfo();
             // Guardo se le informazioni sono valide
-            if(!isUserActive(clientUser) && usersListModel.isValid(clientUser)){
+            if(usersListModel.isValid(clientUser) && !isUserActive(clientUser,clientInfo)){
                 System.out.println("Connessione accettata da : "+ clientUser.getUser());
                // Restituisco una risposta
                 dos.writeBoolean(true);
                 dos.writeInt(port);
                 int clientUDPPort = ois.readInt();
                 int socketAnswers = ois.readInt();
-                // Costruisco l'oggetto che descrive le informazioni sulla connessione col client
-                ClientConnectionInfo clientInfo = new ClientConnectionInfo();
                 clientInfo.setDataOutputStream(dos);
                 clientInfo.setObjectInputStream(ois);
                 clientInfo.setSocket(sock);
@@ -80,8 +79,6 @@ public class TCPServer {
                 client.setClientUser(clientUser);
                 client.setOnlineUsers(online);
                 client.setSuul(usersListModel);
-                // Aggiungo l'utente alla lista dei connessi
-                online.put(clientUser.getUser(),clientInfo);
                 // Avvio l'utente connesso
                 executor.execute(client);
             } else {
@@ -94,10 +91,11 @@ public class TCPServer {
     /**
      * Guardo se è attivo un utente con le credenziali inserite
      * @param clientUser l'utente di cui si desidera avere informazioni
+     * @param clientInfo le informazioni non persistenti dell'utente
      * @return se è attivo o meno
      */
-    private boolean isUserActive(UserModel clientUser){
-        return online.containsKey(clientUser.getUser());
+    private boolean isUserActive(UserModel clientUser, ClientConnectionInfo clientInfo){
+        // Aggiungo l'utente alla lista dei connessi se non presente
+        return online.putIfAbsent(clientUser.getUser(), clientInfo) != null;
     }
-
 }

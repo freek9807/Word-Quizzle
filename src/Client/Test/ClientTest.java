@@ -24,7 +24,7 @@ public class ClientTest {
     /**
      * Test per controllare se a livello di concorrenza la registrazione del Client funziona
      */
-    @Test(threadPoolSize = 3, invocationCount = 100,  timeOut = 10000)
+    @Test(threadPoolSize = 15, invocationCount = 100,  timeOut = 30000)
     public void signUp(){
         try{
             // Mi connetto tramite RMI

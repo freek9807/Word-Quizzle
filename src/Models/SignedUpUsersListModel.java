@@ -26,7 +26,7 @@ public  class SignedUpUsersListModel {
     /**
      * L'hash map in cui salvo le coppie nickUtente - Utente
      */
-    private ConcurrentHashMap<String,UserModel> users = new ConcurrentHashMap<>();
+    private final ConcurrentHashMap<String,UserModel> users = new ConcurrentHashMap<>();
     /**
      * I possibili valori di un inserimento nell'hash map
      */

@@ -52,13 +52,11 @@ public class RemoteTestNG {
      * @throws UserAlreadyExistsException Se l'utente esiste già
      * @throws PasswordNotValidException Se la password non è valida
      */
-    @Test(threadPoolSize = 15, invocationCount = 100,  timeOut = 10000)
+    @Test(threadPoolSize = 30, invocationCount = 100,  timeOut = 10000)
     public void SignedUpUsersListModelTest() throws UserAlreadyExistsException, PasswordNotValidException {
         int a = atomicInteger.addAndGet(1);
-        assertTrue(server.registration("f.p"+a,"prova1"));
+        assertTrue(server.registration("f.pennino"+a,"prova1"));
         SignedUpUsersListModel.addResult add = val.add(new UserModel().setUser("f.pennino"+a).setPassword("prova1"));
-        assertEquals(add, SignedUpUsersListModel.addResult.OKAY);
-        add = val.add(new UserModel().setUser("f.pennino"+a).setPassword("prova1"));
         assertEquals(add, SignedUpUsersListModel.addResult.EXISTS);
     }
 }
