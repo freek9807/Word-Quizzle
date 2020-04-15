@@ -11,8 +11,6 @@ import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.concurrent.ConcurrentHashMap;
-import java.util.function.BiConsumer;
-import java.util.function.Consumer;
 /**
  * Descrive il file contenente la lista degli utenti
  */
@@ -99,13 +97,14 @@ public  class SignedUpUsersListModel {
      * @return se tutto è andato okay
      */
     public addResult add(UserModel um){
-        // Se l'utente è già presente annullo tutto
-        if(users.containsKey(um.getUser()))
+        if(users.putIfAbsent(um.getUser(),um) == null){
+            // Aggiungo l'utente e salvo il file
+            this.store();
+            return addResult.OKAY;
+        } else {
+            // Se l'utente è già presente annullo tutto
             return addResult.EXISTS;
-        // Altrimenti aggiungo l'utente e salvo il file
-        users.put(um.getUser(),um);
-        this.store();
-        return addResult.OKAY;
+        }
     }
     /**
      * Controllo se l'utente esiste
