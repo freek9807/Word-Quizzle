@@ -195,13 +195,17 @@ public class WaitForChallengeRunnable implements Runnable {
             } else {
                 // Altrimenti ottengo il mio punteggio
                 String output = new String(b.array()).trim();
+                int points = Integer.parseInt(output);
                 showDialog("Hai totalizzato " + output +" punti");
                 b.clear();
                 // Ottengo il punteggio del mio avversario
                 b = ByteBuffer.allocate(256);
                 clientS.read(b);
                 output = new String(b.array()).trim();
-                showDialog("Il tuo avversario ha totalizzato " + output +" punti");
+                int points2 = Integer.parseInt(output);
+                showDialog(
+                        (points > points2 ? "Vittoria!" : points < points2 ? "Sconfitta!" : "Pareggio!")
+                                + " Il tuo avversario ha totalizzato " + output +" punti");
                 clientS.close();
             }
         } else {

@@ -112,7 +112,7 @@ public  class SignedUpUsersListModel {
      * @return se è un utente valido o meno
      */
     public boolean isValid(UserModel um){
-        return users.contains(um) && users.get(um.getUser()).getPassword().equals(um.getPassword());
+        return users.containsKey(um.getUser()) && users.get(um.getUser()).getPassword().equals(um.getPassword());
     }
     /**
      * Aggiungo un nuovo arco di amicizia

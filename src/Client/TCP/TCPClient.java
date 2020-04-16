@@ -323,10 +323,14 @@ public class TCPClient {
             String output = new String(b.array()).trim();
             showDialog("Hai totalizzato " + output +" punti");
             b.clear();
+            int points = Integer.parseInt(output);
             b = ByteBuffer.allocate(256);
             client.read(b);
             output = new String(b.array()).trim();
-            showDialog("Il tuo avversario ha totalizzato " + output +" punti");
+            int points2 = Integer.parseInt(output);
+            showDialog(
+                    (points > points2 ? "Vittoria!" : points < points2 ? "Sconfitta!" : "Pareggio!")
+                            + " Il tuo avversario ha totalizzato " + output +" punti");
             client.close();
         }
     }

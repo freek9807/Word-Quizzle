@@ -278,6 +278,12 @@ public class ChallengeRunnable implements Runnable {
             }
             suul.addPoints(clients[i].getPoints(),clients[i].getName());
         }
+
+        if(clients[0].getPoints() > clients[1].getPoints()){
+            suul.addPoints(2,clients[0].getName());
+        } else if(clients[0].getPoints() < clients[1].getPoints()) {
+            suul.addPoints(2,clients[1].getName());
+        }
     }
     /**
      * Controlla se entrambi i giocatori hanno inviato tutte le parole
