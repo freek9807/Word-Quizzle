@@ -1,6 +1,6 @@
 # Word-Quizzle
 
-My computer networking project (UNIPI).
+My university computer networking project (UNIPI).
 
 # Description
 
